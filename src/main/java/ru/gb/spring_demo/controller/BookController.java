@@ -1,5 +1,6 @@
 package ru.gb.spring_demo.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,17 @@ import java.util.NoSuchElementException;
 @Slf4j
 @RestController
 @RequestMapping("/books")
+@RequiredArgsConstructor
 public class BookController {
 
 
-    @Autowired
-    private BookService bookService;
+
+    private final BookService bookService;
+
+//    @Autowired
+//    public BookController(BookService bookService) {
+//        this.bookService = bookService;
+//    }
 
     @GetMapping("/{id}")
     public Book getBook(@PathVariable("id") Long id) {

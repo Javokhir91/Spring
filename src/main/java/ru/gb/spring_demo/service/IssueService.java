@@ -35,14 +35,19 @@ public class IssueService {
         this.readerRepository = readerRepository;
     }
 
-    public Issue saveIssue(IssueRequest request) {
+    public Issue saveIssue(Issue issue) {
+        issueRepository.save(issue);
+        return issue;
+    }
+
+
+    public Issue saveIssueReques(IssueRequest request) {
         if (bookRepository.findById(request.getBookId()).isEmpty()) {
             throw new NoSuchElementException("Не найдена книга с идентификатором \"" + request.getBookId() + "\"");
         }
         if (readerRepository.findById(request.getReaderId()).isEmpty()) {
             throw new NoSuchElementException("Не найдена читатель с идентификатором \"" + request.getReaderId() + "\"");
         }
-
         // моно проверить, что у читателя нет книг на руках (или его лимит не привышает в Х книг)
 
         Issue issue = new Issue(request.getBookId(), request.getReaderId());

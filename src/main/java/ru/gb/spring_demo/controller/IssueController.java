@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.spring_demo.model.Issue;
 import ru.gb.spring_demo.model.IssueDTO;
-import ru.gb.spring_demo.model.Reader;
 import ru.gb.spring_demo.service.IssueService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -30,7 +30,7 @@ public class IssueController {
         log.info("Получен запрос на выдачу: readerId = {}, bookId = {}", request.getReaderId(), request.getBookId());
         final Issue issue;
         try {
-            issue = issueService.saveIssue(request);
+            issue = issueService.saveIssueReques(request);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }
@@ -47,15 +47,29 @@ public class IssueController {
     public ResponseEntity<Issue> getIssueById(@PathVariable Long id){
         Issue issue = issueService.getIssueById(id);
         if (issue == null) {
-            return ResponseEntity.notFound().build();
+            // выяснить на счет new
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(issue);
+            return new ResponseEntity<>(issue, HttpStatus.OK);  //ResponseEntity.ok(issue);
         }
     }
 
-    @PostMapping("/issue")
-    public ResponseEntity<?> issueBook(@RequestParam Long readerId, @RequestParam Issue newIssue){
-        return issueService.issueBookToReader(readerId, newIssue);
+//    @PostMapping("/issue")
+//    public ResponseEntity<?> issueBook(@RequestParam Long readerId, @RequestParam Issue newIssue){
+//        return issueService.issueBookToReader(readerId, newIssue);
+//    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Issue> updateIssue(@PathVariable Long id){
+        Issue issue = issueService.getIssueById(id);
+        if (issue == null) {
+            // выяснить на счет new
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //ResponseEntity.notFound().build();
+        } else {
+            issue.setReturnAt(LocalDateTime.now());
+            issueService.saveIssue(issue);
+            return new ResponseEntity<>(issue, HttpStatus.OK);  //ResponseEntity.ok(issue);
+        }
     }
 
 }
