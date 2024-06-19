@@ -3,6 +3,8 @@ package ru.gb.spring_demo.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.spring_demo.model.Book;
 import ru.gb.spring_demo.model.Issue;
@@ -14,8 +16,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
-@RestController
-@RequestMapping("/reader")
+@Controller
+@RequestMapping("/readers")
 public class ReaderController {
 
     private final ReaderService readerService;
@@ -25,15 +27,16 @@ public class ReaderController {
         this.readerService = readerService;
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Reader>> getAllReader() {
-        return ResponseEntity.ok(readerService.getAllReaders());
+    public String getReaders(Model model) {
+        model.addAttribute("readers", readerService.getAllReaders());
+        return "readers";
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<Reader> getReaderById(@RequestParam Long id) {
-        return ResponseEntity.ok(readerService.getReaderById(id));
+    @GetMapping("/{id}")
+    public String getReader(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("reader", readerService.getReaderById(id));
+        return "reader";
     }
 
     @GetMapping("/{id}/issue")
@@ -56,8 +59,5 @@ public class ReaderController {
     public Reader updateReader(@PathVariable("id") Long id, @RequestBody Reader reader) {
         return readerService.updateReader(reader);
     }
-
-
-
 
 }
