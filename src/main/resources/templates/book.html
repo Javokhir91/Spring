@@ -1,21 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Book Details</title>
+    <title>Book description</title>
 </head>
 <body>
-<h3>Book</h3>
-<table>
-    <tr>
-        <th>ID</th>
-        <td th:text="${book.id}"></td>
-    </tr>
-    <tr>
-        <th>Name</th>
-        <td th:text="${book.name}"></td>
-    </tr>
-</table> <br>
-<a href="/books">Back to list</a>
+<h3>Book title: "<span th:text="${bookById.name}"></span>"</h3>
+<p>Book id: <b><span th:text="${bookById.id}"></span></b></p>
 </body>
 </html>
