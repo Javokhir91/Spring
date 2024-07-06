@@ -1,0 +1,48 @@
+package org.exaple.api;
+
+import com.github.javafaker.Faker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java.util.UUID;
+
+
+@RestController
+@RequestMapping("/api/reader")
+public class ReaderController {
+    private final List<Reader> readers;
+    private final Faker faker;
+
+    @Autowired
+    public ReaderController() {
+        List<Reader> readers = new ArrayList<>();
+        Faker faker = new Faker();
+        this.faker = faker;
+        for (int i = 0; i < 16; i++) {
+            Reader reader = new Reader();
+            reader.setId(UUID.randomUUID());
+            reader.setFirstname(faker.name().firstName());
+            reader.setLastname(faker.name().lastName());
+
+            readers.add(reader);
+        }
+        this.readers = readers;
+    }
+
+    @GetMapping
+    public List<Reader> getAll(){
+        return readers;
+    }
+
+    @GetMapping("/random")
+    public Reader getRandom(){
+        final int randomIndex = faker.number().numberBetween(0, readers.size());
+        return readers.get(randomIndex);
+    }
+
+}
